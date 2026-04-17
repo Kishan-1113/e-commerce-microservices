@@ -1,8 +1,14 @@
 package com.example.e_commerce_microservices.Services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Mod;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.e_commerce_microservices.Exceptions.ResourceNotFoundException;
@@ -16,21 +22,30 @@ public class UserServices {
     @Autowired
     private JpaRepo4Users userRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    AuthenticationManager authManager;
+
     public List<ModelUser> getAllUsers() {
         return userRepo.findAll();
     }
 
     public void registerUser(ModelUser user) {
-        if (user != null)
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.save(user);
-        else
+        } else
             throw new ResourceNotFoundException("User can't be empty !");
     }
 
-    public boolean loginUser(LoginRequest entity) {
-        ModelUser user = userRepo.findUserByemail(entity.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found !"));
-        return user.getPassword().equals(entity.getPassword());
+    public Optional<ModelUser> loginUser(LoginRequest entity) {
+        Authentication authentication = authManager
+                .authenticate(new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
+
+        return authentication.isAuthenticated() ? userRepo.findUserByemail(entity.getEmail()) : null;
+
     }
 
     public void addToCart(String productId) {

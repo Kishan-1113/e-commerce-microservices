@@ -12,14 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -31,8 +28,9 @@ public class UserControllers {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest entity) {
-        return userServices.loginUser(entity) ? ResponseEntity.status(HttpStatus.FOUND).body("Welcome")
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return userServices.loginUser(entity) != null
+                ? ResponseEntity.status(HttpStatus.OK).body(userServices.loginUser(entity))
+                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
     @PostMapping("/register")

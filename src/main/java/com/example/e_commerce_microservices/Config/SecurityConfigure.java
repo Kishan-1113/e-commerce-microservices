@@ -36,7 +36,7 @@ public class SecurityConfigure {
                 .authorizeHttpRequests(auth -> auth
                         // Permit the forward dispatcher type
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers("/users/old", "/users/new", "/users/test").permitAll()
+                        .requestMatchers("/users/login", "/users/register").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .authenticationProvider(authProvider)
@@ -44,10 +44,10 @@ public class SecurityConfigure {
                 .build();
     }
 
-    // @Bean
-    // public PasswordEncoder passwordEncoder() {
-    // return new BCryptPasswordEncoder(10);
-    // }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
+    }
 
     // public AuthenticationManager
 
@@ -55,10 +55,11 @@ public class SecurityConfigure {
     public AuthenticationProvider authenticationProvider(MyUserDetailService userDetailService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailService);
-        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
+    // This will be used for login
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();

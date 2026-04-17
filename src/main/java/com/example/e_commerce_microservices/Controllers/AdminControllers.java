@@ -20,8 +20,6 @@ import com.example.e_commerce_microservices.Models.UpdatePriceRequest;
 import com.example.e_commerce_microservices.Services.ProductServices;
 import com.example.e_commerce_microservices.Services.UserServices;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 @RestController
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/admin")
