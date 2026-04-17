@@ -1,5 +1,7 @@
 package com.example.e_commerce_microservices.Services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,15 @@ public class UserServices {
     @Autowired
     private JpaRepo4Users userRepo;
 
+    public List<ModelUser> getAllUsers() {
+        return userRepo.findAll();
+    }
+
     public void registerUser(ModelUser user) {
         if (user != null)
             userRepo.save(user);
+        else
+            throw new ResourceNotFoundException("User can't be empty !");
     }
 
     public boolean loginUser(LoginRequest entity) {

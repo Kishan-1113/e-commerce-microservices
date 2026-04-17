@@ -2,9 +2,10 @@ package com.example.e_commerce_microservices.Models;
 
 import java.util.List;
 
-import com.mongodb.lang.NonNull;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -20,16 +21,18 @@ import lombok.Setter;
 public class ModelUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NonNull
+    @Column(nullable = false)
     private String name;
-    @NonNull
+    @Column(nullable = false)
     private String email;
-    @NonNull
+    @Column(nullable = false)
     private String password;
 
-    // Fetch the
+    private String role = "USER";
+    // Fetch from mongodb
     private List<String> userCart;
     private List<String> addresses;
 

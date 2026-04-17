@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.e_commerce_microservices.Models.ModelUser;
 
 @Repository
-public interface JpaRepo4Users extends JpaRepository<ModelUser, Integer> {
+public interface JpaRepo4Users extends JpaRepository<ModelUser, Long> {
 
     Optional<ModelUser> findUserByemail(String username);
 
