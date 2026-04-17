@@ -12,9 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,15 +30,13 @@ public class UserControllers {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest entity) {
-        return userServices.loginUser(entity) != null
-                ? ResponseEntity.status(HttpStatus.OK).body(userServices.loginUser(entity))
-                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(userServices.loginUser(entity));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody ModelUser user) {
         userServices.registerUser(user);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     // This old endpoint redirects to new endpoint

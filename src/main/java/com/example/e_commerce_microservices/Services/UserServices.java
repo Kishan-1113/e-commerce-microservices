@@ -40,12 +40,15 @@ public class UserServices {
             throw new ResourceNotFoundException("User can't be empty !");
     }
 
-    public Optional<ModelUser> loginUser(LoginRequest entity) {
-        Authentication authentication = authManager
-                .authenticate(new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
+    public ModelUser loginUser(LoginRequest entity) {
 
-        return authentication.isAuthenticated() ? userRepo.findUserByemail(entity.getEmail()) : null;
+        authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        entity.getEmail(),
+                        entity.getPassword()));
 
+        return userRepo.findUserByemail(entity.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     public void addToCart(String productId) {

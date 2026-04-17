@@ -34,13 +34,13 @@ public class AdminControllers {
     // Admin level product controllers
     @GetMapping("/products/all")
     public ResponseEntity<List<ProductModel>> getAllProducts() {
-        return ResponseEntity.status(HttpStatus.FOUND).body(productServices.getAllProducts());
+        return ResponseEntity.status(HttpStatus.OK).body(productServices.getAllProducts());
     }
 
     @PostMapping("/products/new")
     public ResponseEntity<ProductModel> addNewProduct(@RequestBody ProductModel product) {
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(productServices.addProduct(product));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productServices.addProduct(product));
     }
 
     @PutMapping("/products/updatePrice/{name}")
