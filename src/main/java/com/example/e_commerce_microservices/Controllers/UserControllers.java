@@ -3,12 +3,18 @@ package com.example.e_commerce_microservices.Controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.e_commerce_microservices.Models.LoginRequest;
+import com.example.e_commerce_microservices.Models.ModelUser;
+import com.example.e_commerce_microservices.Services.UserServices;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,14 +25,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/users")
 public class UserControllers {
 
+    @Autowired
+    private UserServices userServices;
+
     @GetMapping("/test")
     public String testMethod() {
         return new String("Testing functioning !");
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String param) {
-        return param;
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest entity) {
+        return userServices.loginUser(entity) ? ResponseEntity.status(HttpStatus.FOUND).body("Welcome")
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody ModelUser user) {
+        userServices.registerUser(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
     // This old endpoint redirects to new endpoint

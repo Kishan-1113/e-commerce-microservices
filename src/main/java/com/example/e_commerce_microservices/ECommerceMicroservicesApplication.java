@@ -8,5 +8,4 @@ public class ECommerceMicroservicesApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ECommerceMicroservicesApplication.class, args);
 	}
-
 }
