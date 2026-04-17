@@ -29,6 +29,7 @@ public class UserControllers {
         return param;
     }
 
+    // This old endpoint redirects to new endpoint
     @PostMapping("/old")
     public void redirect(HttpServletRequest request, HttpServletResponse response, @RequestBody String s)
             throws IOException, ServletException {
