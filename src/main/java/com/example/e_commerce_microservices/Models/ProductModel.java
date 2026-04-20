@@ -16,7 +16,7 @@ import lombok.Setter;
 public class ProductModel {
 
     @Id
-    private ObjectId Id;
+    private ObjectId id;
 
     @NonNull
     @Indexed(unique = true)
@@ -24,5 +24,12 @@ public class ProductModel {
     private String description;
     @NonNull
     private double price;
+    @NonNull
+    private boolean active = true;
+    @NonNull
+    private String category;
+
+    private long quantity;
+    private String imgUrl = "https://img.freepik.com/premium-vector/ecommerce-brand-logo-vector-graphic_1152716-1392.jpg?semt=ais_hybrid&w=740&q=80";
 
 }

@@ -1,6 +1,7 @@
 package com.example.e_commerce_microservices.Models;
 
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,8 +33,7 @@ public class ModelUser {
     private String password;
 
     private String role = "USER";
-    // Fetch from mongodb
-    private List<String> userCart;
+
     private List<String> addresses;
 
 }
