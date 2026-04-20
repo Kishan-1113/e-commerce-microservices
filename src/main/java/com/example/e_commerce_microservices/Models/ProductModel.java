@@ -30,6 +30,6 @@ public class ProductModel {
     private String category;
 
     private long quantity;
-    private String imgUrl = "https://img.freepik.com/premium-vector/ecommerce-brand-logo-vector-graphic_1152716-1392.jpg?semt=ais_hybrid&w=740&q=80";
+    private String imgUrl = "https://marketplace.canva.com/EAGSPYBFATg/2/0/1600w/canva-purple-and-beige-delivery-services-online-shopping-logo-2ecBOlEcA6Y.jpg";
 
 }
