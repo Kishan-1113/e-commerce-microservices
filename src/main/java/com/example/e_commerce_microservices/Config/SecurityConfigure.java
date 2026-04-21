@@ -1,5 +1,6 @@
 package com.example.e_commerce_microservices.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,10 +11,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.e_commerce_microservices.Services.MyUserDetailService;
 
@@ -24,12 +27,15 @@ import jakarta.servlet.DispatcherType;
 @EnableMethodSecurity
 public class SecurityConfigure {
 
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             AuthenticationProvider authProvider)
-
             throws Exception {
+
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -40,6 +46,11 @@ public class SecurityConfigure {
                 .httpBasic(Customizer.withDefaults())
                 .authenticationProvider(authProvider)
                 .formLogin(Customizer.withDefaults())
+
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .build();
     }
 
@@ -50,6 +61,7 @@ public class SecurityConfigure {
 
     // public AuthenticationManager
 
+    @SuppressWarnings("deprecation")
     @Bean
     public AuthenticationProvider authenticationProvider(MyUserDetailService userDetailService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

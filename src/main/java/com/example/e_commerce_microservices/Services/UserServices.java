@@ -26,7 +26,10 @@ public class UserServices {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    AuthenticationManager authManager;
+    private AuthenticationManager authManager;
+
+    @Autowired
+    private JwtService jwtService;
 
     public List<ModelUser> getAllUsers() {
         return userRepo.findAll();
@@ -40,15 +43,14 @@ public class UserServices {
             throw new ResourceNotFoundException("User can't be empty !");
     }
 
-    public ModelUser loginUser(LoginRequest entity) {
+    public String loginUser(LoginRequest entity) {
 
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         entity.getEmail(),
                         entity.getPassword()));
 
-        return userRepo.findUserByemail(entity.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return jwtService.generateToken(entity.getEmail());
     }
 
     public void addToCart(String productId) {
