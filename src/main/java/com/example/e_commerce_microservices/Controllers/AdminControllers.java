@@ -20,8 +20,8 @@ import com.example.e_commerce_microservices.Models.UpdatePriceRequest;
 import com.example.e_commerce_microservices.Services.ProductServices;
 import com.example.e_commerce_microservices.Services.UserServices;
 
-@RestController
 @PreAuthorize("hasAuthority('ADMIN')")
+@RestController
 @RequestMapping("/admin")
 public class AdminControllers {
 
@@ -38,7 +38,7 @@ public class AdminControllers {
     }
 
     @PostMapping("/products/new")
-    public ResponseEntity<ProductModel> addNewProduct(@RequestBody ProductModel product) {
+    public ResponseEntity<?> addNewProduct(@RequestBody ProductModel product) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productServices.addProduct(product));
     }

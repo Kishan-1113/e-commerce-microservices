@@ -1,6 +1,7 @@
 package com.example.e_commerce_microservices.Config;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.e_commerce_microservices.Services.JwtService;
 import com.example.e_commerce_microservices.Services.MyUserDetailService;
+import com.mongodb.lang.NonNull;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -43,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = context.getBean(MyUserDetailService.class).loadUserByUsername(username);
 
-            if (jwtService.validteToken(token, userDetails)) {
+            if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken token2 = new UsernamePasswordAuthenticationToken(username, null,
                         userDetails.getAuthorities());
 
@@ -52,6 +54,12 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.equals("/users/login") || path.equals("/users/register");
     }
 
 }

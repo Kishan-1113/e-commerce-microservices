@@ -1,14 +1,13 @@
 package com.example.e_commerce_microservices.Services;
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,34 +18,26 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-    private String secretKey;
-    SecretKey sc;
 
-    public JwtService() {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
-            this.sc = keyGenerator.generateKey();
-            this.secretKey = Base64.getEncoder().encodeToString(sc.getEncoded());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // Injecting the key from properties/env
+    @Value("${app.jwt.secret}")
+    private String secretKey;
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts
                 .builder()
-                .claims()
-                .add(claims)
+                .claims(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 10))
-                .and()
+                // Fixed: 10 minutes = 1000ms * 60s * 10
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
                 .signWith(getKey())
                 .compact();
     }
 
     private SecretKey getKey() {
+        // This ensures the key is consistently derived from your static string
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -55,7 +46,7 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
@@ -69,7 +60,7 @@ public class JwtService {
                 .getPayload();
     }
 
-    public boolean validteToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -81,5 +72,4 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
 }

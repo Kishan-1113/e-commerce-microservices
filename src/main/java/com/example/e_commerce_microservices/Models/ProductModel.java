@@ -24,7 +24,7 @@ public class ProductModel {
     private String description;
     @NonNull
     private double price;
-    @NonNull
+
     private boolean active = true;
     @NonNull
     private String category;

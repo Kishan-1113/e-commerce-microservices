@@ -40,12 +40,10 @@ public class SecurityConfigure {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Permit the forward dispatcher type
+                        .requestMatchers("/users/**").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers("/users/login", "/users/register").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
                 .authenticationProvider(authProvider)
-                .formLogin(Customizer.withDefaults())
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 

@@ -25,9 +25,10 @@ public class ProductServices {
     }
 
     public ProductModel addProduct(ProductModel product) {
-        if (product != null)
-            mongoRepo.save(product);
-        return product;
+        if (product.getName() != null && product.getCategory() != null && product.getPrice() != 0)
+            return mongoRepo.save(product);
+
+        throw new ResourceNotFoundException("Product details missing");
     }
 
     public ProductModel updatePrice(String name, UpdatePriceRequest request) {

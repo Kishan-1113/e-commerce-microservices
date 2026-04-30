@@ -31,5 +31,4 @@ public class ProductControllers {
     public ProductModel getProduct(@PathVariable String name) {
         return productServices.getProduct(name);
     }
-
 }
